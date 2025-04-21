@@ -2,7 +2,7 @@ from flask_jwt_extended import jwt_required
 from sqlalchemy.orm import Session
 from ..models.model import Product, db
 from flask import jsonify
-from ..extension.utils import message_handler, role_required
+from .utils import message_handler, role_required
 from functools import wraps
 
 # Function to obtain a database session.

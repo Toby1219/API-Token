@@ -1,6 +1,6 @@
 import json
 from ..models.model import db, Product, Dimension, Meta, Review, Image, Tag
-from ..routes.routes_handler import session_handler
+
 
 
 def json_to_sql():

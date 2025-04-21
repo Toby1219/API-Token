@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from ..extension.utils import message_handler
 from ..models.model import Product
-from .routes_handler import *
+from ..extension.routes_handler import *
 
 w_bp = Blueprint('w_bp', __name__)
   
