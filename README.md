@@ -1,6 +1,6 @@
 This is a simple API with flask that use jwt authentications.
 
-to run you must have your .env file to run  ths API with the following configuration
+to run you must have your .env file to run  the API with the following configuration
 
 
 
