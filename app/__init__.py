@@ -3,21 +3,31 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from .extension.config import Config
 from .extension.utils import message_handler
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_limiter.errors import RateLimitExceeded
+
 
 db = SQLAlchemy()
 jwt = JWTManager()
 
-def create_app():
-    app = Flask(__name__)
-    app.config.from_object(Config)
-    
-    db.init_app(app)
-    jwt.init_app(app)
-    
+app = Flask(__name__)
+app.config.from_object(Config)
+
+db.init_app(app)
+jwt.init_app(app)
+
+limiter = Limiter(get_remote_address, app=app, default_limits=["5 per day", "1 per minutes"])
+
+def create_app():    
     from .routes.auth import auth_bp
     from .routes.views import w_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(w_bp, url_prefix='/api')
+    
+    @app.errorhandler(RateLimitExceeded)
+    def ratelimit_handler(e):
+        return jsonify(message_handler("Rate limit exceeded try again later.", '', ok=False)), 429
     
     @jwt.expired_token_loader
     def expired_token(jwt_header, jwt_payload):

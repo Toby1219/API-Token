@@ -4,6 +4,7 @@ from ..models.model import Product, db
 from flask import jsonify
 from .utils import message_handler, role_required
 from functools import wraps
+from .. import limiter
 
 # Function to obtain a database session.
 # This function uses the SQLAlchemy session context manager to ensure proper session handling.
@@ -43,10 +44,11 @@ def search_handler(*args):
 # - `bp`: The Flask Blueprint to register the route.
 # - `method`: The HTTP method for the route (default is "GET").
 # - `route_`: The route path (default is "/").
-def func_wraper_handler(bp, method="GET", route_="/"):
+def func_wraper_handler(bp, method="GET", route_="/", sec="2"):
     def decorator(f):
         @wraps(f)
         @bp.route(route_, methods=[method])
+        @limiter.limit(f"{sec} per seconds")
         @role_required('user', 'admin')  # Restrict access to users with 'user' or 'admin' roles.
         @jwt_required()  # Require JWT authentication for the route.
         def wraped(*args, **kwargs):

@@ -11,7 +11,7 @@ def home_guest():
   result = [d.to_dict() for d in prod]
   return jsonify([message_handler("Products API <Current user(guest)>", result[:10])]), 200
    
-@func_wraper_handler(bp=w_bp, route_='/product/all')
+@func_wraper_handler(bp=w_bp, route_='/product/all', sec="1")
 def home_user():
   _page = request.args.get("page", default=1, type=int)
   _per_page = request.args.get("per_page", default=5, type=int)
